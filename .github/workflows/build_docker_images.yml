@@ -1,0 +1,73 @@
+name: Build Docker Images
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - 'Ubuntu/Dockerfile.buildenv.ubuntu'
+      - 'Ubuntu/Dockerfile.sfts.ubuntu'
+      - 'Ubuntu/Dockerfile.runtime.ubuntu'
+
+env:
+  REGISTRY: ghcr.io
+
+jobs:
+  build:
+    name: Build ${{ matrix.name }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: buildenv
+            dockerfile: Dockerfile.buildenv.ubuntu
+            image: emod-ubuntu-buildenv
+            context: Ubuntu
+          - name: sfts
+            dockerfile: Dockerfile.sfts.ubuntu
+            image: emod-ubuntu-testenv
+            context: Ubuntu
+          - name: runtime
+            dockerfile: Dockerfile.runtime.ubuntu
+            image: emod-ubuntu-runtime
+            context: Ubuntu
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set lower-case image ref
+        id: image
+        run: |
+          OWNER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
+          echo "ref=${{ env.REGISTRY }}/${OWNER}/${{ matrix.image }}" >> $GITHUB_OUTPUT
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ steps.image.outputs.ref }}
+          tags: |
+            type=raw,value=latest,enable={{is_default_branch}}
+            type=sha,prefix=sha-
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: ${{ matrix.context }}
+          file: Ubuntu/${{ matrix.dockerfile }}
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
