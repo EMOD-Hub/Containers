@@ -1,10 +1,9 @@
 #######################################################################
 # Create an Ubuntu LINUX environment with tools and dependencies for running
-# scientific feature tests with the Institute for Disease Modeling, Disease
-# Transmission Kernel (DTK)
+# regression and scientific feature tests with the EMOD binaries
 
 # This Docker build file is provided as a convenience for running scientific
-# feature tests with the DTK on LINUX.
+# feature tests with the EMOD binaries on LINUX.
 #######################################################################
 FROM ubuntu:22.04
 

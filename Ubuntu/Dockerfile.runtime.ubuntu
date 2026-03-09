@@ -1,6 +1,10 @@
-# FROM docker-production.packages.idmod.org/dtk-ubuntu-runtime:latest
-# Replace the following lines with above line after the official image is available
-#############################################################
+#######################################################################
+# Create an Ubuntu LINUX environment with tools and dependencies for running the
+# EMOD binaries
+
+# This Docker build file is provided as a convenience for running the EMOD binaries
+# on LINUX.
+#######################################################################
 FROM ubuntu:22.04
 # Set the timezone and the frontend
 ENV TZ=UTC DEBIAN_FRONTEND=noninteractive
@@ -9,9 +13,12 @@ ENV PIP_ROOT_USER_ACTION=ignore
 
 # Install the necessary packages
 RUN apt-get update && apt-get install -y \
-    python3 \
-    python3-dev \
-    python3-pip \
+    software-properties-common \
+    && add-apt-repository ppa:deadsnakes/ppa \
+    && apt-get update
+
+RUN apt-get install -y \
+    python3.13 python3.13-dev python3.13-venv \
     mpich \
     libsnappy1v5 \
     libc6-dev \
@@ -23,7 +30,12 @@ RUN apt-get update && apt-get install -y \
 # Set up timezone
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
-# Install pip
+# Set python3.13 as default and install pip
+RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.13 1 \
+    && wget -q https://bootstrap.pypa.io/get-pip.py \
+    && python3.13 get-pip.py \
+    && rm get-pip.py
+
 RUN python3 -m pip install pip --upgrade
 # Create a symbolic link to python3
 RUN ln -s /usr/bin/python3 /usr/bin/python
@@ -31,10 +43,6 @@ RUN ln -s /usr/bin/python3 /usr/bin/python
 RUN mkdir /root/.pip
 # Copy the pip configuration file
 COPY pip.conf /root/.pip
-
-# Set the path and library path (mpich on Ubuntu 22.04)
-ENV PATH=${PATH}:/usr/lib/mpich/bin
-ENV LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/usr/lib/mpich/lib
 
 # Add the requirements file
 ADD requirements.txt /tmp/

@@ -70,7 +70,7 @@ Minimal Ubuntu 22.04 image for running DTK simulations (without build tooling).
 
 | Package | Purpose |
 |---|---|
-| `python3-dev python3-pip` | Python runtime and pip |
+| `python3.13 python3.13-dev python3.13-venv` | Python 3.13 runtime (deadsnakes PPA), set as default via `update-alternatives` |
 | `libsnappy1v5` | Snappy compression runtime |
 | `libc6-dev` | glibc headers |
 | `tzdata` | Timezone data |

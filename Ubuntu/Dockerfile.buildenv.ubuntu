@@ -1,9 +1,9 @@
 #######################################################################
 # Create an Ubuntu LINUX environment with tools and dependencies for building the
-# Institute for Disease Modeling, Disease Transmission Kernel (DTK)
+# EMOD binaries
 
-# This Docker build file is provided as a convenience for building the DTK on
-# LINUX.
+# This Docker build file is provided as a convenience for building the EMOD binaries
+# on LINUX.
 #######################################################################
 FROM ubuntu:22.04
 
