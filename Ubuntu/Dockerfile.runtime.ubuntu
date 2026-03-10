@@ -39,8 +39,6 @@ RUN python3 -m pip install pip --upgrade
 RUN ln -s /usr/bin/python3 /usr/bin/python
 # Create a directory for pip configurations
 RUN mkdir /root/.pip
-# Copy the pip configuration file
-COPY pip.conf /root/.pip
 
 # Add the requirements file
 COPY requirements.runtime.txt /tmp/requirements.txt
