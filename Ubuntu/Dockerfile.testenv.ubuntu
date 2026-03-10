@@ -37,6 +37,3 @@ RUN python3 -m pip install --upgrade pip
 
 COPY requirements.testenv.txt /tmp/
 RUN pip3 install -r /tmp/requirements.testenv.txt
-
-# IDM packages from private index
-RUN pip3 install emod-api --index-url https://packages.idmod.org/api/pypi/idm-pypi-production/simple
