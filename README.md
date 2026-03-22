@@ -7,8 +7,8 @@ Hosted images can be found in the GitHub container registry at `ghcr.io/emod-hub
 
 ## Community and Contributions
 
-- Have a question or a comment? Check out our [Discussions](https://github.com/EMOD-Hub/issues-and-discussions) space.
-- Want to file an issue or request a feature? Please go [here](https://github.com/EMOD-Hub/issues-and-discussions).
+- Have a question or a comment? Check out our [Discussions](https://github.com/orgs/EMOD-Hub/discussions) space.
+- Want to file an issue or request a feature? Please go [here](https://github.com/EMOD-Hub/issues-and-discussions/issues).
 
 ## Disclaimer
 
