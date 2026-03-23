@@ -1,73 +1,67 @@
 name: Build Docker Images
 
 on:
+  # Allows manual run from the Actions tab
   workflow_dispatch:
-  push:
-    branches:
-      - main
-    paths:
-      - 'Ubuntu/Dockerfile.buildenv.ubuntu'
-      - 'Ubuntu/Dockerfile.testenv.ubuntu'
-      - 'Ubuntu/Dockerfile.runtime.ubuntu'
+    inputs:
+      os_name:
+        description: 'Container OS'
+        required: true
+        default: 'Ubuntu'
+        type: choice
+        options:
+          - 'Ubuntu'
+      type:
+        description: 'Container type'
+        required: true
+        default: 'buildenv'
+        type: choice
+        options:
+          - 'buildenv'
+          - 'testenv'
+          - 'runtime'
+      version_tag:
+        description: 'Version tag'
+        required: true
+        type: string
+        default: 'latest'
 
 env:
   REGISTRY: ghcr.io
+  ORG_NAME: emod-hub  # Must be lowercase
 
 jobs:
   build:
-    name: Build ${{ matrix.name }}
+    name: Build and push Docker image
     runs-on: ubuntu-latest
+    env:
+      dfile_name: ${{ format('Dockerfile.{0}.{1}', inputs.type, inputs.os_name) }}
+      image_name: ${{ format('emod-{0}-{1}', inputs.os_name, inputs.type) }}
     permissions:
-      contents: read
+      artifact-metadata: write
+      attestations: write
+      id-token: write
       packages: write
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - name: buildenv
-            dockerfile: Dockerfile.buildenv.ubuntu
-            image: emod-ubuntu-buildenv
-            context: Ubuntu
-          - name: testenv
-            dockerfile: Dockerfile.testenv.ubuntu
-            image: emod-ubuntu-testenv
-            context: Ubuntu
-          - name: runtime
-            dockerfile: Dockerfile.runtime.ubuntu
-            image: emod-ubuntu-runtime
-            context: Ubuntu
-
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v4
-
-      - name: Set lower-case image ref
-        id: image
-        run: |
-          OWNER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
-          echo "ref=${{ env.REGISTRY }}/${OWNER}/${{ matrix.image }}" >> $GITHUB_OUTPUT
-
+        uses: actions/checkout@v6
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v3
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Extract metadata
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ${{ steps.image.outputs.ref }}
-          tags: |
-            type=raw,value=latest,enable={{is_default_branch}}
-            type=sha,prefix=sha-
-
       - name: Build and push
+        id: push
         uses: docker/build-push-action@v6
         with:
-          context: ${{ matrix.context }}
-          file: Ubuntu/${{ matrix.dockerfile }}
+          context: .
+          file: ${{ inputs.os_name}}/${{ env.dfile_name }}
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          tags: ${{ env.REGISTRY }}/${{ env.ORG_NAME }}/${{ env.image_name }}:${{ inputs.version_tag }}
+      - name: Generate artifact attestation
+        uses: actions/attest@v4
+        with:
+          subject-name: ${{ env.REGISTRY }}/${{ env.ORG_NAME }}/${{ env.image_name }}
+          subject-digest: ${{ steps.push.outputs.digest }}
+          push-to-registry: true
