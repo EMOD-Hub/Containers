@@ -48,6 +48,7 @@ jobs:
       - name: Create labels
         run: |
           echo "LABEL_DATE=org.opencontainers.image.created=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> $GITHUB_ENV
+          echo "LABEL_DESC=org.opencontainers.image.description=$(cat README.md)" >> $GITHUB_ENV
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v4
         with:
@@ -67,6 +68,7 @@ jobs:
           tags: ${{ env.REGISTRY }}/${{ env.ORG_NAME }}/${{ env.IMAGE_NAME }}:${{ inputs.version_tag }}
           labels: |
             ${{ env.LABEL_DATE }}
+            ${{ env.LABEL_DESC }}
       - name: Generate artifact attestation
         uses: actions/attest@v4
         with:
