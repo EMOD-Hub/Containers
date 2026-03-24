@@ -7,10 +7,11 @@ on:
       os_name:
         description: 'Container OS'
         required: true
-        default: 'Ubuntu'
+        default: 'ubuntu'
         type: choice
         options:
-          - 'Ubuntu'
+          - 'ubuntu'
+          - 'centos'
       type:
         description: 'Container type'
         required: true
