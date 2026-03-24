@@ -65,7 +65,8 @@ jobs:
           push: true
           sbom: true
           tags: ${{ env.REGISTRY }}/${{ env.ORG_NAME }}/${{ env.IMAGE_NAME }}:${{ inputs.version_tag }}
-          labels: [ ]
+          labels: |
+            ${{ env.LABEL_DATE }}
       - name: Generate artifact attestation
         uses: actions/attest@v4
         with:
