@@ -58,6 +58,7 @@ jobs:
           context: ./${{ inputs.os_name}}
           file: ${{ inputs.os_name}}/${{ env.dfile_name }}
           push: true
+          sbom: true
           tags: ${{ env.REGISTRY }}/${{ env.ORG_NAME }}/${{ env.image_name }}:${{ inputs.version_tag }}
       - name: Generate artifact attestation
         uses: actions/attest@v4
