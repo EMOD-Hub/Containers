@@ -20,11 +20,6 @@ on:
           - 'buildenv'
           - 'testenv'
           - 'runtime'
-      version_tag:
-        description: 'Version tag'
-        required: true
-        type: string
-        default: 'latest'
 
 env:
   REGISTRY: ghcr.io
@@ -45,11 +40,6 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v6
-      - name: Create labels
-        run: |
-          echo "LABEL_ORIG=org.opencontainers.image.source=github.com/EMOD-Hub/Containers" >> $GITHUB_ENV
-          echo "LABEL_DESC=org.opencontainers.image.description=Workflow container for EMOD" >> $GITHUB_ENV
-          echo "LABEL_LISC=org.opencontainers.image.licenses=MIT" >> $GITHUB_ENV
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v4
         with:
@@ -58,6 +48,14 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v4
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v6
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.ORG_NAME }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=raw,value=latest,enable={{is_default_branch}}
+            type=sha,prefix=sha-
       - name: Build and push
         id: push
         uses: docker/build-push-action@v7
@@ -66,11 +64,8 @@ jobs:
           file: ${{ inputs.os_name}}/${{ env.DFILE_NAME }}
           push: true
           sbom: true
-          tags: ${{ env.REGISTRY }}/${{ env.ORG_NAME }}/${{ env.IMAGE_NAME }}:${{ inputs.version_tag }}
-          labels: |
-            ${{ env.LABEL_ORIG }}
-            ${{ env.LABEL_DESC }}
-            ${{ env.LABEL_LISC }}
+          tags:  ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
       - name: Generate artifact attestation
         uses: actions/attest@v4
         with:
