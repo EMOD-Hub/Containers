@@ -22,8 +22,12 @@ RUN apt-get install -y libsnappy1v5
 RUN apt-get clean
 RUN rm -rf /var/lib/apt/lists/*
 
+RUN printenv
+
 # Set python3.13 as default
 RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.13 1
+
+RUN printenv
 
 # Install python packages
 RUN python3 -m ensurepip
@@ -41,3 +45,5 @@ RUN python3 -m pip install numpy~=2.4
 RUN python3 -m pip install pyproj~=3.7
 RUN python3 -m pip install scikit-learn~=1.8
 RUN python3 -m pip install shapely~=2.1
+
+RUN printenv
