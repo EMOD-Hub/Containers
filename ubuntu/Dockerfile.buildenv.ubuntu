@@ -17,7 +17,6 @@ RUN apt-get install -y git
 RUN apt-get install -y g++
 RUN apt-get install -y libc-dev
 RUN apt-get install -y python3.13-dev
-RUN apt-get install -y python3.13-venv
 RUN apt-get install -y mpich libmpich-dev
 RUN apt-get install -y libboost-all-dev
 RUN apt-get install -y scons
@@ -25,6 +24,5 @@ RUN apt-get install -y scons
 RUN apt-get clean
 RUN rm -rf /var/lib/apt/lists/*
 
-# Create virtual environment; add to path
-RUN python3.13 -m venv py_env
-ENV PATH=/py_env/bin:$PATH
+# Set python3.13 as default
+RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.13 1
