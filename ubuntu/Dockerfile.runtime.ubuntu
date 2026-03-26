@@ -13,11 +13,11 @@ RUN apt-get install -y software-properties-common
 RUN add-apt-repository ppa:deadsnakes/ppa
 RUN apt-get update
 
-RUN apt-get install -y python3.13
+RUN apt-get install -y python3.13-dev  # Provides libpython3.13.so
 RUN apt-get install -y python3.13-venv  # Provides ensurepip
 RUN apt-get install -y mpich
 RUN apt-get install -y libsnappy1v5
-#RUN apt-get install -y libboost-all
+RUN apt-get install -y libboost-all-dev  # Provides libmpi_cxx.so (???)
 
 RUN apt-get clean
 RUN rm -rf /var/lib/apt/lists/*
@@ -41,3 +41,7 @@ RUN python3 -m pip install numpy~=2.4
 RUN python3 -m pip install pyproj~=3.7
 RUN python3 -m pip install scikit-learn~=1.8
 RUN python3 -m pip install shapely~=2.1
+
+# Allows mpiexec in container as root
+ENV OMPI_ALLOW_RUN_AS_ROOT=1
+ENV OMPI_ALLOW_RUN_AS_ROOT_CONFIRM=1
