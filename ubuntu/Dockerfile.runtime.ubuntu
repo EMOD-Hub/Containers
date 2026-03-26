@@ -6,6 +6,7 @@
 FROM ubuntu:22.04
 
 ENV DEBIAN_FRONTEND=noninteractive
+ENV USER=EMOD_USER
 
 RUN apt-get update
 RUN apt-get install -y software-properties-common
@@ -16,7 +17,7 @@ RUN apt-get install -y python3.13
 RUN apt-get install -y python3.13-venv
 RUN apt-get install -y mpich
 RUN apt-get install -y libsnappy1v5
-RUN apt-get install -y libc6-dev
+#RUN apt-get install -y libboost-all
 
 RUN apt-get clean
 RUN rm -rf /var/lib/apt/lists/*

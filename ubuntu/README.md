@@ -61,9 +61,8 @@ Minimal Ubuntu 22.04 image for running EMOD simulations (without build tooling).
 
 | Package | Purpose |
 |---|---|
-| `python3.13 python3.13-venv` | Python 3.13 runtime (deadsnakes PPA), set as default via `update-alternatives` |
+| `python3.13` | Python 3.13 runtime (deadsnakes PPA) |
+| `python3.13-venv` | Python 3.13 virtual environments (deadsnakes PPA) |
+| `mpich` | MPI runtime |
 | `libsnappy1v5` | Snappy compression runtime |
 | `libc6-dev` | glibc headers |
-| `tzdata` | Timezone data |
-| `mpich` | MPI runtime |
-

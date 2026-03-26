@@ -6,7 +6,7 @@
 FROM ubuntu:22.04
 
 ENV DEBIAN_FRONTEND=noninteractive
-ENV USER=luser
+ENV USER=EMOD_USER
 
 RUN apt-get update
 RUN apt-get install -y software-properties-common
