@@ -16,25 +16,16 @@ These images are built and pushed to GHCR via the `build_docker_images.yml` pipe
 
 ## `Dockerfile.buildenv.ubuntu`
 
-Python 3.13 (via `deadsnakes` PPA), SCons (via pip), and the system packages needed to compile EMOD with GCC 11 and MPICH.
+Python 3.13 (via `deadsnakes` PPA), SCons , and the system packages needed to compile EMOD with GCC 11 and MPICH.
 
 ### System Packages
 
 | Package | Purpose |
 |---|---|
 | `g++` | C++ compiler |
-| `mpich libmpich-dev` | MPI runtime and headers |
+| `libc-dev` | Linux headers |
+| `libmpich-dev` | MPI runtime and headers |
 | `libboost-all-dev` | Boost libraries |
-| `libsnappy-dev` | Snappy compression |
-| `liblz4-dev` | LZ4 compression |
-| `libsqlite3-dev` | SQLite |
-| `libbz2-dev` | bzip2 compression |
-| `libssl-dev` | OpenSSL |
-| `libreadline-dev` | Readline |
-| `libffi-dev` | FFI |
-| `liblzma-dev` | XZ/LZMA compression |
-| `uuid-dev` | UUID |
-| `tk-dev` | Tk |
 
 ---
 
