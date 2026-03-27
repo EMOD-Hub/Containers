@@ -9,13 +9,13 @@ This directory contains Dockerfiles for building and running EMOD on Ubuntu 22.0
 | `Dockerfile.buildenv.ubuntu` | Ubuntu 22.04 | Compile EMOD |
 | `Dockerfile.runtime.ubuntu` | Ubuntu 22.04 | Run EMOD simulations |
 
-These images are built and pushed to GHCR via the `build_docker_images.yml` pipeline as `emod-ubuntu-buildenv`, `emod-ubuntu-testenv`, and `emod-ubuntu-runtime`.
+These images are built and pushed to GHCR via the `build_docker_images.yml` pipeline as `emod-ubuntu-buildenv` and `emod-ubuntu-runtime`.
 
 ---
 
 ## `Dockerfile.buildenv.ubuntu`
 
-Python 3.13 (via `deadsnakes` PPA), SCons , and the system packages needed to compile EMOD with GCC 11 and MPICH.
+Python 3.13 (via `deadsnakes` PPA), SCons, and the system packages needed to compile EMOD with GCC 11 and MPICH.
 
 ### System Packages
 
