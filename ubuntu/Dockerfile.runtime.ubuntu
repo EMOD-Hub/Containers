@@ -1,50 +1,47 @@
 #######################################################################
-# Create an Ubuntu LINUX environment with tools and dependencies for running the
-# EMOD binaries
-
-# This Docker build file is provided as a convenience for running the EMOD binaries
-# on LINUX.
+# Create an Ubuntu LINUX environment with tools and dependencies for running the EMOD binaries
+#
+# This Docker build file is provided as a convenience for running the EMOD binaries on LINUX.
 #######################################################################
 FROM ubuntu:22.04
-# Set the timezone and the frontend
-ENV TZ=UTC DEBIAN_FRONTEND=noninteractive
-# To suppress warning without altering the installation when pip install with root user
-ENV PIP_ROOT_USER_ACTION=ignore
 
-RUN apt-get update && apt-get install -y software-properties-common \
-    && add-apt-repository ppa:deadsnakes/ppa \
-    && apt-get update
+ENV DEBIAN_FRONTEND=noninteractive
+ENV USER=EMOD_USER
 
-RUN apt-get install -y \
-    python3.13 python3.13-dev python3.13-venv \
-    mpich \
-    libsnappy1v5 \
-    libc6-dev \
-    tzdata \
-    wget \
-    nano \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
+RUN apt-get update
+RUN apt-get install -y software-properties-common
+RUN add-apt-repository ppa:deadsnakes/ppa
+RUN apt-get update
 
-# Set up timezone
-RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+RUN apt-get install -y python3.13-dev  # Provides libpython3.13.so
+RUN apt-get install -y python3.13-venv  # Provides ensurepip
+RUN apt-get install -y mpich
+RUN apt-get install -y libsnappy1v5
+RUN apt-get install -y libboost-all-dev  # Provides libmpi_cxx.so (???)
 
-# Set python3.13 as default and install pip
-RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.13 1 \
-    && wget -q https://bootstrap.pypa.io/get-pip.py \
-    && python3.13 get-pip.py \
-    && rm get-pip.py
+RUN apt-get clean
+RUN rm -rf /var/lib/apt/lists/*
 
+# Set python3.13 as default
+RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.13 1
+
+# Install python packages
+RUN python3 -m ensurepip
 RUN python3 -m pip install pip --upgrade
-# Create a symbolic link to python3
-RUN ln -s /usr/bin/python3 /usr/bin/python
-# Create a directory for pip configurations
-RUN mkdir /root/.pip
 
-# Add the requirements file
-COPY requirements.runtime.txt /tmp/requirements.txt
+RUN python3 -m pip install h5py~=3.15
+RUN python3 -m pip install lz4~=4.4
+RUN python3 -m pip install python-snappy~=0.7
+RUN python3 -m pip install matplotlib~=3.10
+RUN python3 -m pip install pandas~=3.0
+RUN python3 -m pip install scipy~=1.17
+RUN python3 -m pip install seaborn~=0.13
+RUN python3 -m pip install geographiclib~=2.1
+RUN python3 -m pip install numpy~=2.4
+RUN python3 -m pip install pyproj~=3.7
+RUN python3 -m pip install scikit-learn~=1.8
+RUN python3 -m pip install shapely~=2.1
 
-# make the PIP index configurable so we can build against staging, production, or a local PyPI server
-ARG CONTAINER_VERSION
-
-# Install the packages
-RUN bash -c "pip3 install -r /tmp/requirements.txt"
+# Allows mpiexec in container as root
+ENV OMPI_ALLOW_RUN_AS_ROOT=1
+ENV OMPI_ALLOW_RUN_AS_ROOT_CONFIRM=1

@@ -14,11 +14,10 @@ on:
       type:
         description: 'Container type'
         required: true
-        default: 'buildenv'
+        default: 'runtime'
         type: choice
         options:
           - 'buildenv'
-          - 'testenv'
           - 'runtime'
 
 env:

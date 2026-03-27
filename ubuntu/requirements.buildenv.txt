@@ -1,9 +1,0 @@
-# Build tools
-pbr~=7.0
-wheel~=0.46
-virtualenvwrapper~=6.1
-PyYAML~=6.0
-setuptools~=82.0
-
-# Build system
-scons~=4.10
