@@ -7,7 +7,6 @@ This directory contains Dockerfiles for building and running EMOD on Ubuntu 22.0
 | File | Base OS | Purpose |
 |---|---|---|
 | `Dockerfile.buildenv.ubuntu` | Ubuntu 22.04 | Compile EMOD |
-| `Dockerfile.testenv.ubuntu` | Ubuntu 22.04 | Run Regression and Run Science Feature Tests |
 | `Dockerfile.runtime.ubuntu` | Ubuntu 22.04 | Run EMOD simulations |
 
 These images are built and pushed to GHCR via the `build_docker_images.yml` pipeline as `emod-ubuntu-buildenv`, `emod-ubuntu-testenv`, and `emod-ubuntu-runtime`.
@@ -24,32 +23,9 @@ Python 3.13 (via `deadsnakes` PPA), SCons , and the system packages needed to co
 |---|---|
 | `g++` | C++ compiler |
 | `libc-dev` | Linux headers |
+| `python3.13-dev` | Python headers |
 | `libmpich-dev` | MPI runtime and headers |
 | `libboost-all-dev` | Boost libraries |
-
----
-
-## `Dockerfile.sfts.ubuntu`
-
-Extends `buildenv` with additional packages for running Science Feature Tests.
-
-### Additional System Packages
-
-| Added | Reason |
-|---|---|
-| `pkg-config` | Required by `python-snappy` and `lz4` to locate native libraries during compilation |
-| `libhdf5-dev` | Required by `h5py` to compile its C extension; not pulled in transitively on Ubuntu |
-
-### pip Install Structure
-
-pip packages are installed in four separate layers for better error isolation and Docker layer caching:
-
-```
-1. Scientific computing  — numpy scipy pandas matplotlib seaborn
-2. Utilities             — bs4 hypothesis jsonmerge openpyxl python-dateutil ...
-3. C extension packages  — h5py lz4 python-snappy
-4. Test runner           — unittest-xml-reporting
-```
 
 ---
 
@@ -61,8 +37,8 @@ Minimal Ubuntu 22.04 image for running EMOD simulations (without build tooling).
 
 | Package | Purpose |
 |---|---|
-| `python3.13` | Python 3.13 runtime (deadsnakes PPA) |
+| `python3.13-dev` | Python 3.13 runtime (deadsnakes PPA) |
 | `python3.13-venv` | Python 3.13 virtual environments (deadsnakes PPA) |
 | `mpich` | MPI runtime |
 | `libsnappy1v5` | Snappy compression runtime |
-| `libc6-dev` | glibc headers |
+| `libboost-all-dev` | Shouldn't need this but it's providing MPI stuff |
