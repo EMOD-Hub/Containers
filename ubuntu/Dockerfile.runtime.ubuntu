@@ -1,6 +1,6 @@
 #######################################################################
 # Create an Ubuntu LINUX environment with tools and dependencies for running the EMOD binaries
-
+#
 # This Docker build file is provided as a convenience for running the EMOD binaries on LINUX.
 #######################################################################
 FROM ubuntu:22.04
