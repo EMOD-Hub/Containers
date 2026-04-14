@@ -19,11 +19,14 @@ RUN apt-get install -y mpich
 RUN apt-get install -y libsnappy1v5
 RUN apt-get install -y libboost-all-dev  # Provides libmpi_cxx.so (???)
 
+RUN apt-get install -y nano
+
 RUN apt-get clean
 RUN rm -rf /var/lib/apt/lists/*
 
 # Set python3.13 as default
 RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.13 1
+RUN update-alternatives --install /usr/bin/python python /usr/bin/python3.13 1
 
 # Install python packages
 RUN python3 -m ensurepip
@@ -45,3 +48,6 @@ RUN python3 -m pip install shapely~=2.1
 # Allows mpiexec in container as root
 ENV OMPI_ALLOW_RUN_AS_ROOT=1
 ENV OMPI_ALLOW_RUN_AS_ROOT_CONFIRM=1
+
+# Add directory for user python packages to path
+ENV PATH="/home/container_data/.local/bin:$PATH"
