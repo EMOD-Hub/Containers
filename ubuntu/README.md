@@ -25,7 +25,7 @@ Python 3.13 (via `deadsnakes` PPA), SCons, and the system packages needed to com
 | `libc-dev` | Linux headers |
 | `python3.13-dev` | Python headers |
 | `libmpich-dev` | MPI runtime and headers |
-| `libboost-all-dev` | Boost libraries |
+| `libboost-dev` | Boost headers |
 
 ---
 
@@ -41,4 +41,3 @@ Minimal Ubuntu 22.04 image for running EMOD simulations (without build tooling).
 | `python3.13-venv` | Python 3.13 virtual environments (deadsnakes PPA) |
 | `mpich` | MPI runtime |
 | `libsnappy1v5` | Snappy compression runtime |
-| `libboost-all-dev` | Shouldn't need this but it's providing MPI stuff |
