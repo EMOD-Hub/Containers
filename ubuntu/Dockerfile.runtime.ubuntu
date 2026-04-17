@@ -17,7 +17,6 @@ RUN apt-get install -y python3.13-dev  # Provides libpython3.13.so
 RUN apt-get install -y python3.13-venv  # Provides ensurepip
 RUN apt-get install -y mpich
 RUN apt-get install -y libsnappy1v5
-RUN apt-get install -y libboost-all-dev  # Provides libmpi_cxx.so (???)
 
 RUN apt-get install -y nano
 
