@@ -3,18 +3,13 @@
 #
 # This Docker build file is provided as a convenience for running the EMOD binaries on LINUX.
 #######################################################################
-FROM ubuntu:22.04
+FROM ubuntu:26.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV USER=EMOD_USER
 
 RUN apt-get update
-RUN apt-get install -y software-properties-common
-RUN add-apt-repository ppa:deadsnakes/ppa
-RUN apt-get update
 
-RUN apt-get install -y python3.13-dev  # Provides libpython3.13.so
-RUN apt-get install -y python3.13-venv  # Provides ensurepip
 RUN apt-get install -y mpich
 RUN apt-get install -y libsnappy1v5
 
@@ -23,16 +18,14 @@ RUN apt-get install -y nano
 RUN apt-get clean
 RUN rm -rf /var/lib/apt/lists/*
 
-# Set python3.13 as default
-RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.13 1
-RUN update-alternatives --install /usr/bin/python python /usr/bin/python3.13 1
-
-# Install python packages
-RUN python3 -m ensurepip
-RUN python3 -m pip install pip --upgrade
+# Provide python as an alias to python3
+RUN update-alternatives --install /usr/bin/python python /usr/bin/python3.14 1
 
 # Provide pip as an alias to pip3
 RUN update-alternatives --install /usr/local/bin/pip pip /usr/local/bin/pip3 1
+
+# Install python packages
+RUN python3 -m pip install pip --upgrade
 
 RUN python3 -m pip install h5py~=3.15
 RUN python3 -m pip install lz4~=4.4
@@ -46,10 +39,6 @@ RUN python3 -m pip install numpy~=2.4
 RUN python3 -m pip install pyproj~=3.7
 RUN python3 -m pip install scikit-learn~=1.8
 RUN python3 -m pip install shapely~=2.1
-
-# Allows mpiexec in container as root
-ENV OMPI_ALLOW_RUN_AS_ROOT=1
-ENV OMPI_ALLOW_RUN_AS_ROOT_CONFIRM=1
 
 # Add directory for user python packages to path
 ENV PATH="/home/container_data/.local/bin:$PATH"
