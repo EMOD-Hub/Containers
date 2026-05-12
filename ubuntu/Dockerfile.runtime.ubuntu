@@ -10,19 +10,17 @@ ENV USER=EMOD_USER
 
 RUN apt-get update
 
+RUN apt-get install -y python3-full
 RUN apt-get install -y mpich
 RUN apt-get install -y libsnappy1v5
 
 RUN apt-get install -y nano
 
 RUN apt-get clean
-RUN rm -rf /var/lib/apt/lists/*
 
-# Provide python as an alias to python3
-RUN update-alternatives --install /usr/bin/python python /usr/bin/python3.14 1
-
-# Provide pip as an alias to pip3
-RUN update-alternatives --install /usr/local/bin/pip pip /usr/local/bin/pip3 1
+# Create a virtual environment for custom python packages
+RUN python3 -m venv py_env
+ENV PATH="/py_env/bin:${PATH}"
 
 # Install python packages
 RUN python3 -m pip install pip --upgrade
