@@ -10,7 +10,8 @@ ENV USER=EMOD_USER
 
 RUN apt-get update
 
-RUN apt-get install -y python3-full
+RUN apt-get install -y python3-dev
+RUN apt-get install -y python3-venv
 RUN apt-get install -y mpich
 RUN apt-get install -y libsnappy1v5
 

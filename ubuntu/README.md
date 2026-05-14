@@ -37,6 +37,7 @@ Minimal Ubuntu 26.04 image for running EMOD simulations (without build tooling).
 
 | Package | Purpose |
 |---|---|
-| `python3-full` | Python runtime |
+| `python3-dev` | Python support |
+| `python3-venv` | Virtual environment support |
 | `mpich` | MPI runtime |
 | `libsnappy1v5` | Snappy compression runtime |
