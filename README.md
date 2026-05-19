@@ -17,7 +17,7 @@ Community contributions are welcome, and trusted collaborators may review and
 merge pull requests, but no guarantees are made regarding support, pull request
 review, security response, maintenance, or release timelines.
 
-# Latest: Ubuntu Docker Images
+## Latest: Ubuntu Docker Images
 
 Dockerfiles for building and running EMOD on Ubuntu 22.04.
 
